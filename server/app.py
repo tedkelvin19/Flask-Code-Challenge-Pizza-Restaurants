@@ -10,11 +10,10 @@ migrate = Migrate(app,db)
 
 db.init_app(app)
 api = Api(app)
-
 class Restaurants(Resource):
     def get(self):
-        restaurants = [restaurant.to_dict() for restaurant in Restaurant.query.all()]
-        return make_response(jsonify(restaurants),200)
+        restaurants = [restaurants.serialize() for restaurants in Restaurant.query.all()]
+        return make_response(jsonify(restaurants), 200)
 api.add_resource(Restaurants, '/restaurants')
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ function Home() {
 
     return (
         <section className="container">
-        {restaurants.filter((restaurant) => (
+        {restaurants.map((restaurant) => (
           <div key={restaurant.id} className="card">
             <h2>
               <Link to={`/restaurants/${restaurant.id}`}>{restaurant.name}</Link>
