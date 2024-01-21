@@ -15,6 +15,16 @@ class Restaurants(Resource):
         restaurants = [restaurants.serialize() for restaurants in Restaurant.query.all()]
         return make_response(jsonify(restaurants), 200)
 api.add_resource(Restaurants, '/restaurants')
+class Pizzas(Resource):
+    def get(self):
+        pizzas = [pizzas.serialize() for pizzas in Pizza.query.all()]
+        return make_response(jsonify(pizzas), 200)
+api.add_resource(Pizzas, '/pizzas')    
 
+class RestaurantPizzas(Resource):
+    def get(self):
+        restaurant_pizzas = [restaurant_pizzas.serialize() for restaurant_pizzas in RestaurantPizza.query.all()]
+        return make_response(jsonify(restaurant_pizzas), 200)
+api.add_resource(RestaurantPizzas, '/restaurant_pizzas')
 if __name__ == '__main__':
     app.run(port=5555,debug=True)
