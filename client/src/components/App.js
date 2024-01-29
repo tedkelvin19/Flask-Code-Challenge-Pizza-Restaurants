@@ -1,22 +1,18 @@
-import { Route, Routes } from 'react-router-dom';
-import Navbar from './Navbar';
-import Home from './Home';
-import Restaurant from './Restaurant';
-import RestaurantPizza from './RestaurantPizza';
-import Pizza from './Pizza';
+import { Route, Routes } from "react-router";
+import Home from "./Home";
+import Navbar from "./Navbar";
+import Restaurant from "./Restaurant";
 
 function App() {
   return (
-    <div>
-      <Navbar/>
+    <>
+      <Navbar />
       <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/pizza' element={<Pizza/>}/>
-        <Route path='/restaurantpizza' element={<RestaurantPizza/>}/>
-        <Route path='/restaurants/:id' element={<Restaurant/>}/>
+        <Route exact path="/restaurants/:id" element={ <Restaurant />} />
+        <Route exact path="/" element={<Home />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
-export default App
+export default App;

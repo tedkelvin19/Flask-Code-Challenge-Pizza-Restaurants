@@ -1,51 +1,72 @@
-import {useEffect,  useState} from 'react';
-import {useParams} from 'react-router-dom';
-import PizzaForm from './PizzaForm';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import PizzaForm from "./PizzaForm";
 
-function Home(){
-    const[{data: restaurant, error, status}, setRestaurant] = useState({data: null, error: null, status: 'pending'});
-    const {id} = useParams();
-    useEffect(()=> {
-        fetch(`/restaurants/${id}`).then(response => {
-            if (response.ok) {
-                response.json().then(data => {
-                    setRestaurant({data: data, error: null, status: 'resolved'});
-                })
-            } else {
-                response.json().then(data => {
-                    setRestaurant({data: null, error: data, status: 'rejected'});
-                })
-            }
-        })
-    }, [id]);
+function Home() {
+  const [{ data: restaurant, error, status }, setRestaurant] = useState({
+    data: null,
+    error: null,
+    status: "pending",
+  });
+  const { id } = useParams();
 
-    function handleAddPizza(newPizza){
-        setRestaurant({data: {...restaurant, pizzas: [...restaurant.pizzas, newPizza]}, error: null, status: 'resolved'});
-    }
+  useEffect(() => {
+    fetch(`/restaurants/${id}`).then((r) => {
+      if (r.ok) {
+        r.json().then((restaurant) =>
+          setRestaurant({ data: restaurant, error: null, status: "resolved" })
+        );
+      } else {
+        r.json().then((err) =>
+          setRestaurant({ data: null, error: err.error, status: "rejected" })
+        );
+      }
+    });
+  }, [id]);
 
-    if (status === 'pending') {
-        return <p>Loading...</p>
-    } else if (status === 'rejected') {
-        return <p>{error.message}</p>
-    }
+  function handleAddPizza(newRestaurantPizza) {
+    setRestaurant({
+      data: {
+        ...restaurant,
+        restaurant_pizzas: [
+          ...restaurant.restaurant_pizzas,
+          newRestaurantPizza,
+        ],
+      },
+      error: null,
+      status: "resolved",
+    });
+  }
 
-    return (
-        <section className='container'>
-            <div className='card'>
-                <h1>{restaurant.name}</h1>
-                <p>{restaurant.address}</p>
-            </div>
-            <div className='card'>
-                <h2>Pizza Menu</h2>
-                {restaurant.pizzas.map(pizza => <p key={pizza.id}>{pizza.name}</p>)}
-            </div>
-            <div className='card'>
-                <h2>Add a new pizza</h2>
-                <PizzaForm restaurantId={id} onPizzaSubmit={handleAddPizza}/>
-            </div>
-        </section>
-    )
+  if (status === "pending") return <h1>Loading...</h1>;
+  if (status === "rejected") return <h1>Error: {error.error}</h1>;
+
+  return (
+    <section className="container">
+      <div className="card">
+        <h1>{restaurant.name}</h1>
+        <p>{restaurant.address}</p>
+      </div>
+      <div className="card">
+        <h2>Pizza Menu</h2>
+        {restaurant.restaurant_pizzas.map((restaurant_pizza) => (
+          <div key={restaurant_pizza.pizza.id}>
+            <h3>{restaurant_pizza.pizza.name}</h3>
+            <p>
+              <em>{restaurant_pizza.pizza.ingredients}</em>
+            </p>
+            <p>
+              <em>Price ${restaurant_pizza.price}</em>
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="card">
+        <h3>Add New Pizza</h3>
+        <PizzaForm restaurantId={restaurant.id} onAddPizza={handleAddPizza} />
+      </div>
+    </section>
+  );
 }
 
-export default Home
-
+export default Home;
